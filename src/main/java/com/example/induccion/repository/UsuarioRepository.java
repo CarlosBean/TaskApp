@@ -11,6 +11,7 @@ import com.example.induccion.entity.Usuario;
 @Repository("usuarioRepository")
 public interface UsuarioRepository extends JpaRepository<Usuario, Serializable>{
 	public abstract Usuario findByCedula(String cedula);
+	public abstract Usuario findByEmail(String email);
 	public abstract List<Usuario> findAll();
 	public abstract Usuario findById(Integer id);
 }

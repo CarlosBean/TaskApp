@@ -1,7 +1,9 @@
 package com.example.induccion.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,16 +13,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario extends Audit implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -44,21 +49,8 @@ public class Usuario {
 	
 	@Column(name = "eliminado", nullable = true)
 	private boolean eliminado;
-	
-	@Column(name = "fecha_inicio", nullable = true)
-    private Date fechaInicio;
-	
-	@Column(name = "fecha_fin", nullable = true)
-    private Date fechaFin;
-	
-	@Column(name = "fecha_creacion", nullable = true, updatable = false)
-    @CreatedDate
-    private Date fechaCreacion;
-	
-    @Column(name = "fecha_actualizacion", nullable = true)
-    @LastModifiedDate
-    private Date fechaActualizacion;
     
+	@JsonIgnoreProperties("usuarioList")
     @JoinTable(name = "usuarios_has_roles", joinColumns = {
 			@JoinColumn(name = "id_usuarios", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_roles", referencedColumnName = "id") })
@@ -68,7 +60,7 @@ public class Usuario {
     @JoinTable(name = "usuarios_has_tareas", joinColumns = {
 			@JoinColumn(name = "id_usuarios", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_tareas", referencedColumnName = "id") })
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Tarea> tareaList;
     
     @ManyToMany(mappedBy = "usuarioList")
@@ -78,8 +70,7 @@ public class Usuario {
 	}
 
 	public Usuario(Integer id, String cedula, String password, String nombre, String email, boolean estado,
-			boolean eliminado, Date fechaInicio, Date fechaFin, Date fechaCreacion, Date fechaActualizacion,
-			List<Rol> rolList, List<Tarea> tareaList, List<Proyecto> proyectoList) {
+			boolean eliminado, List<Rol> rolList, List<Tarea> tareaList, List<Proyecto> proyectoList) {
 		super();
 		this.id = id;
 		this.cedula = cedula;
@@ -88,10 +79,6 @@ public class Usuario {
 		this.email = email;
 		this.estado = estado;
 		this.eliminado = eliminado;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaActualizacion = fechaActualizacion;
 		this.rolList = rolList;
 		this.tareaList = tareaList;
 		this.proyectoList = proyectoList;
@@ -151,38 +138,6 @@ public class Usuario {
 
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
-	}
-
-	public Date getFechaInicio() {
-		return fechaInicio;
-	}
-
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public Date getFechaFin() {
-		return fechaFin;
-	}
-
-	public void setFechaFin(Date fechaFin) {
-		this.fechaFin = fechaFin;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public List<Rol> getRolList() {

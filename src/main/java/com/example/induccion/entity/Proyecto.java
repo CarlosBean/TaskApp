@@ -1,5 +1,6 @@
 package com.example.induccion.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,12 +17,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 @Entity
 @Table(name = "proyectos")
-public class Proyecto {
+public class Proyecto extends Audit implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "id")
@@ -47,14 +50,6 @@ public class Proyecto {
 	
 	@Column(name = "fecha_fin", nullable = true)
     private Date fechaFin;
-	
-	@Column(name = "fecha_creacion", nullable = true, updatable = false)
-    @CreatedDate
-    private Date fechaCreacion;
-	
-    @Column(name = "fecha_actualizacion", nullable = true)
-    @LastModifiedDate
-    private Date fechaActualizacion;
     
     @ManyToOne
 	@JoinColumn(name = "id_tarea", referencedColumnName = "id")
@@ -63,14 +58,14 @@ public class Proyecto {
     @JoinTable(name = "usuarios_has_proyectos", joinColumns = {
 			@JoinColumn(name = "id_usuarios", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_proyectos", referencedColumnName = "id") })
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Usuario> usuarioList;
 
 	public Proyecto() {
 	}
 
 	public Proyecto(Integer id, String nombre, String descripcion, String alias, boolean estado, boolean eliminado,
-			Date fechaInicio, Date fechaFin, Date fechaCreacion, Date fechaActualizacion, Tarea idTarea,
+			Date fechaInicio, Date fechaFin, Tarea idTarea,
 			List<Usuario> usuarioList) {
 		super();
 		this.id = id;
@@ -81,8 +76,6 @@ public class Proyecto {
 		this.eliminado = eliminado;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.fechaCreacion = fechaCreacion;
-		this.fechaActualizacion = fechaActualizacion;
 		this.idTarea = idTarea;
 		this.usuarioList = usuarioList;
 	}
@@ -149,22 +142,6 @@ public class Proyecto {
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
 	}
 
 	public Tarea getIdTarea() {
