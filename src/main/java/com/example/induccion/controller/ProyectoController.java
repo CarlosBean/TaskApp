@@ -32,7 +32,8 @@ public class ProyectoController {
     }
 	
 	@PostMapping
-    public Proyecto createUsuarios(@Valid @RequestBody Proyecto proyecto) {
+    public Proyecto create(@Valid @RequestBody Proyecto proyecto) {
+		proyecto.setEstado(true);
         return proyectoRepository.save(proyecto);
     }
 	

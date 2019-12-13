@@ -34,6 +34,7 @@ public class TareaController {
 	
 	@PostMapping
     public Tarea createUsuarios(@Valid @RequestBody Tarea tarea) {
+		tarea.setEstado(true);
         return tareaRepository.save(tarea);
     }
 	
