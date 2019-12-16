@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -17,13 +19,10 @@ import javax.persistence.Table;
 @Table(name = "tareas")
 public class Tarea extends Audit implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 	
@@ -48,8 +47,9 @@ public class Tarea extends Audit implements Serializable{
 	@Column(name = "fecha_fin", nullable = true)
     private Date fechaFin;
     
-    @OneToMany(mappedBy = "idTarea")
-	private List<Proyecto> proyectoList;
+    @ManyToOne
+   	@JoinColumn(name = "id_proyecto", referencedColumnName = "id")
+   	private Proyecto proyecto;
     
     @ManyToMany(mappedBy = "tareaList")
 	private List<Usuario> usuarioList;
@@ -58,8 +58,7 @@ public class Tarea extends Audit implements Serializable{
 	}
 
 	public Tarea(Integer id, String nombre, String descripcion, String alias, boolean estado, boolean eliminado,
-			Date fechaInicio, Date fechaFin, List<Proyecto> proyectoList,
-			List<Usuario> usuarioList) {
+			Date fechaInicio, Date fechaFin, Proyecto proyecto, List<Usuario> usuarioList) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -69,8 +68,8 @@ public class Tarea extends Audit implements Serializable{
 		this.eliminado = eliminado;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.proyectoList = proyectoList;
 		this.usuarioList = usuarioList;
+		this.proyecto = proyecto;
 	}
 
 	public Integer getId() {
@@ -137,19 +136,19 @@ public class Tarea extends Audit implements Serializable{
 		this.fechaFin = fechaFin;
 	}
 
-	public List<Proyecto> getProyectoList() {
-		return proyectoList;
-	}
-
-	public void setProyectoList(List<Proyecto> proyectoList) {
-		this.proyectoList = proyectoList;
-	}
-
 	public List<Usuario> getUsuarioList() {
 		return usuarioList;
 	}
 
 	public void setUsuarioList(List<Usuario> usuarioList) {
 		this.usuarioList = usuarioList;
+	}
+
+	public Proyecto getProyecto() {
+		return proyecto;
+	}
+
+	public void setProyecto(Proyecto proyecto) {
+		this.proyecto = proyecto;
 	}
 }

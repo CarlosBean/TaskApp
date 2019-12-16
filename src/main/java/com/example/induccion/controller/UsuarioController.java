@@ -39,8 +39,10 @@ public class UsuarioController {
 	@PostMapping
 	public ResponseEntity<?> createUsuarios(@Valid @RequestBody Usuario usuario) {	
 		usuario.setEstado(true);
-		usuario.setRolList(new ArrayList<Rol>());
-		usuario.getRolList().add(new Rol("USER"));
+		if (usuario.getRolList() == null) {
+			usuario.setRolList(new ArrayList<Rol>());
+			usuario.getRolList().add(new Rol("USER"));			
+		}
 		usuarioRepository.save(usuario);
 		return new ResponseEntity<Usuario>(usuario, HttpStatus.CREATED);
 	}

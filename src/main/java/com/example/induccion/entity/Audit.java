@@ -20,7 +20,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 //        allowGetters = true
 //)
 
-public abstract class Audit {
+public abstract class Audit implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_creacion", nullable = false, updatable = false)

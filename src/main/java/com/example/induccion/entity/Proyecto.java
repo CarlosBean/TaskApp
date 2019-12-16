@@ -15,7 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "proyectos")
@@ -26,7 +29,7 @@ public class Proyecto extends Audit implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 	
@@ -50,23 +53,22 @@ public class Proyecto extends Audit implements Serializable{
 	
 	@Column(name = "fecha_fin", nullable = true)
     private Date fechaFin;
+	
+	@OneToMany(mappedBy = "proyecto")
+	private List<Tarea> tareaList;
     
-    @ManyToOne
-	@JoinColumn(name = "id_tarea", referencedColumnName = "id")
-	private Tarea idTarea;
-    
+	@JsonIgnoreProperties("proyectoList")
     @JoinTable(name = "usuarios_has_proyectos", joinColumns = {
 			@JoinColumn(name = "id_usuarios", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "id_proyectos", referencedColumnName = "id") })
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.MERGE)
 	private List<Usuario> usuarioList;
 
 	public Proyecto() {
 	}
 
 	public Proyecto(Integer id, String nombre, String descripcion, String alias, boolean estado, boolean eliminado,
-			Date fechaInicio, Date fechaFin, Tarea idTarea,
-			List<Usuario> usuarioList) {
+			Date fechaInicio, Date fechaFin, Tarea idTarea, List<Tarea> tareaList, List<Usuario> usuarioList) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -76,8 +78,8 @@ public class Proyecto extends Audit implements Serializable{
 		this.eliminado = eliminado;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.idTarea = idTarea;
 		this.usuarioList = usuarioList;
+		this.tareaList = tareaList;
 	}
 
 	public Integer getId() {
@@ -144,19 +146,19 @@ public class Proyecto extends Audit implements Serializable{
 		this.fechaFin = fechaFin;
 	}
 
-	public Tarea getIdTarea() {
-		return idTarea;
-	}
-
-	public void setIdTarea(Tarea idTarea) {
-		this.idTarea = idTarea;
-	}
-
 	public List<Usuario> getUsuarioList() {
 		return usuarioList;
 	}
 
 	public void setUsuarioList(List<Usuario> usuarioList) {
 		this.usuarioList = usuarioList;
+	}
+
+	public List<Tarea> getTareaList() {
+		return tareaList;
+	}
+
+	public void setTareaList(List<Tarea> tareaList) {
+		this.tareaList = tareaList;
 	}
 }

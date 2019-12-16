@@ -21,7 +21,7 @@ public class Rol {
 	@Column(name = "descripcion", length = 20, nullable = false)
 	private String descripcion;
 
-	@JsonIgnoreProperties("rolList")
+	@JsonIgnoreProperties("usuarioList")
 	@ManyToMany(mappedBy = "rolList")
 	private List<Usuario> usuarioList;
 

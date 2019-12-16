@@ -58,7 +58,6 @@ public class TareaController {
     public Tarea delete(@PathVariable("id") int id) {
     	Tarea tarea = tareaRepository.findById(id);
         if(tarea != null){
-        	Hibernate.initialize(tarea.getProyectoList());
         	Hibernate.initialize(tarea.getUsuarioList());
         	tareaRepository.delete(tarea);
         }
